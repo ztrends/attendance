@@ -22,3 +22,124 @@ body.dark{--bg:#0d1726;--surface:#142238;--ink:#e3ebf5;--line:#263850;--muted:#9
 .sidebrand-logo{width:39px;height:39px;flex:0 0 39px;object-fit:contain;border-radius:10px;background:#fff;padding:2px;box-shadow:0 6px 16px #07111f35}
 .sidebrand>div{min-width:0;overflow:hidden}
 .sidebrand>div>b{display:block;max-width:165px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f3f7fc;font:800 14px Manrope;letter-spacing:1.2px}
+/* ===== ZTREND PREMIUM LOGIN DESIGN ===== */
+
+body:has(.login-card),
+body:has(.login-container) {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(ellipse at 15% 20%, rgba(0, 195, 255, .18), transparent 38%),
+        radial-gradient(ellipse at 85% 80%, rgba(40, 90, 220, .22), transparent 40%),
+        linear-gradient(135deg, #07111f, #0b1f3a 55%, #081426);
+    background-attachment: fixed;
+}
+
+/* Full screen centering */
+.login-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* Premium login card */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 42px 36px;
+    margin: auto;
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.075);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 22px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(22px);
+}
+
+/* Center logo */
+.login-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto 28px;
+}
+
+.login-logo img {
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Login heading */
+.login-card h1,
+.login-card h2 {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.login-card p {
+    color: #aabbd0;
+}
+
+/* Input fields */
+.login-card input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.08);
+    color: white;
+    outline: none;
+}
+
+.login-card input:focus {
+    border-color: #00c8ff;
+    box-shadow: 0 0 0 3px rgba(0,200,255,.12);
+}
+
+.login-card input::placeholder {
+    color: #9aaabd;
+}
+
+/* Login button */
+.login-card button {
+    width: 100%;
+    min-height: 49px;
+    margin-top: 16px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(100deg, #087cc4, #00b9d8);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.login-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,185,216,.3);
+}
+
+/* Mobile */
+@media(max-width: 480px) {
+    .login-container {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 32px 22px;
+    }
+}
