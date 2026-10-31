@@ -309,3 +309,56 @@ body[data-portal] #login.login.hidden{display:none!important;}
 /* Compact logo spacing on all portal login screens */
 body[data-portal] #login .login-brand{margin:0 auto 7px!important}
 body[data-portal] #login .login-brand-logo{width:100px!important;height:100px!important}
+
+
+/* ZTREND portal enhancement layer */
+.dash-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.dash-search{display:flex;align-items:center;gap:10px;min-width:0;flex:1;padding:11px 14px;border:1px solid #dce6ef;border-radius:12px;background:#fff;box-shadow:0 5px 18px rgba(19,51,76,.05)}
+.dash-search span{font-size:21px;color:#438a92}
+.dash-search input{border:0!important;outline:0!important;box-shadow:none!important;min-width:0;background:transparent!important;width:100%;font-size:12px}
+.dash-live,.dash-tag{font-size:9px;font-weight:800;letter-spacing:1.2px;color:#18866f;background:#e9f8f3;padding:8px 11px;border-radius:20px;white-space:nowrap}
+.dash-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:15px;margin-top:15px}
+.dash-chart-panel{min-width:0}
+.dash-bars{height:180px;gap:clamp(8px,2vw,22px);align-items:end}
+.dash-bars .bar{border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#28b69a,#347bd4);transition:height .5s ease}
+.status-donut{width:154px;height:154px;margin:12px auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#22ad8b 0 var(--active),#e8edf3 var(--active) 100%);position:relative}
+.status-donut:before{content:"";position:absolute;inset:13px;background:#fff;border-radius:50%}
+.status-donut>div{position:relative;display:grid;text-align:center;gap:4px}
+.status-donut b{font:800 25px Manrope;color:#18344a}
+.status-donut small{font-size:9px;color:#71879a}
+.donut-legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:10px;color:#728394}
+.quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.quick-card{display:grid;text-align:left;gap:7px;padding:15px;border:1px solid #e1eaf0;border-radius:12px;background:linear-gradient(145deg,#fff,#f3faf9);color:#17364b;transition:transform .2s,box-shadow .2s}
+.quick-card:hover{transform:translateY(-3px);box-shadow:0 12px 25px #18394b12}
+.quick-card b{font-size:21px;color:#159b8a}
+.quick-card span{font-size:11px;font-weight:800}
+.quick-card small{font-size:9px;color:#7d909d}
+.search-results{display:grid;gap:7px;margin-top:10px}
+.search-results button{display:grid;text-align:left;gap:4px;padding:10px;border:1px solid #e5edf1;border-radius:9px;background:#fff}
+.search-results button small{font-size:10px;color:#82939e}
+.dash-shortcuts{font-size:10px;color:#82939e;margin:16px 2px}
+.dash-shortcuts kbd{padding:3px 6px;border:1px solid #d9e2e9;border-radius:5px;background:#fff;color:#385a69}
+.pin-login{margin-top:15px;padding-top:12px;border-top:1px solid #e5edf1}
+.pin-divider{text-align:center;font-size:9px;letter-spacing:1.2px;font-weight:800;color:#7b9099;margin:5px 0 10px}
+.pin-login input{width:100%;padding:11px;border:1px solid #dce4ee;border-radius:9px}
+.user-bottom-nav{position:fixed;z-index:50;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92%,390px);display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:8px 10px;border:1px solid #ffffffa8;border-radius:22px;background:rgba(255,255,255,.78);box-shadow:0 12px 40px rgba(17,43,65,.2);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.user-bottom-nav button{border:0;background:transparent;color:#68808d;display:grid;justify-items:center;gap:3px;padding:6px 4px}
+.user-bottom-nav button span{font-size:20px;line-height:1.2}
+.user-bottom-nav button small{font-size:9px;font-weight:800}
+.user-bottom-nav button.active{color:#119b83}
+.user-bottom-nav button.home span{width:43px;height:43px;margin-top:-21px;border-radius:15px;background:linear-gradient(145deg,#20b69a,#267fc0);color:#fff;display:grid;place-items:center;box-shadow:0 7px 18px #169b8b55}
+body[data-portal="user"] #appview{padding-bottom:95px}
+body[data-portal="user"] .main{padding:clamp(12px,3vw,28px)}
+body[data-portal="user"] .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+body[data-portal="user"] .metric{padding:13px;min-width:0}
+body[data-portal="user"] .metric strong{font-size:clamp(16px,4vw,23px);overflow-wrap:anywhere}
+body[data-portal="user"] .hero{align-items:flex-start;flex-direction:column;padding:18px;gap:12px}
+body[data-portal="user"] .hero .actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+body[data-portal="user"] .hero .actions button{min-width:0}
+body[data-portal="user"] .panel{min-width:0;padding:13px;margin-top:12px}
+body[data-portal="user"] .tablewrap{max-width:100%;overflow-x:auto}
+body[data-portal="user"] .top{flex-wrap:wrap;margin-bottom:13px}
+body[data-portal="user"] .top-tools{flex-wrap:wrap}
+body[data-portal="user"] .title{font-size:clamp(18px,5vw,23px)}
+body[data-portal="user"] input,body[data-portal="user"] select,body[data-portal="user"] textarea{max-width:100%;min-width:0}
+@media(max-width:720px){.dash-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-toolbar{align-items:stretch;flex-direction:column}.dash-live{align-self:flex-start}body[data-portal="user"] .layout{display:block}body[data-portal="user"] .main{padding:13px 12px 25px}body[data-portal="user"] .top{align-items:flex-start;gap:8px}body[data-portal="user"] .top-tools{gap:5px}body[data-portal="user"] .top-tools .toolbtn{padding:7px 8px}body[data-portal="user"] .top-tools .chip{display:none}body[data-portal="user"] .panelhead{align-items:flex-start}body[data-portal="user"] .formgrid{grid-template-columns:minmax(0,1fr)}body[data-portal="user"] .field.full{grid-column:auto}body[data-portal="user"] .hero .timer{font-size:27px}}
