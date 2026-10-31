@@ -301,3 +301,7 @@ body[data-portal] #login .loginbox .wide{
 body[data-portal] #login .login-footnote{color:#587a79!important}
 body[data-portal] #login .secure-dot{background:#20ad83!important;box-shadow:0 0 0 4px rgba(32,173,131,.13)!important}
 body[data-portal] #login .loginbox .error{color:#bd3545!important}
+
+
+/* Hide login screen after successful sign-in (override portal display rule) */
+body[data-portal] #login.login.hidden{display:none!important;}
