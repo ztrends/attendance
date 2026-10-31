@@ -7,21 +7,22 @@ function userLogin(){
  const label=$('label[for="email"]'),field=$('#email');
  if(label)label.textContent='Employee ID';
  if(field){field.type='text';field.placeholder='Enter your Employee ID';field.autocomplete='username'}
- const box=$('#signinbox');if(!box||$('#quickPinArea'))return;
- const area=document.createElement('div');area.id='quickPinArea';area.className='pin-login';
- area.innerHTML='<div class="pin-divider">OR QUICK PIN LOGIN</div><input id="quickPin" type="password" inputmode="numeric" maxlength="6" placeholder="Enter 4–6 digit PIN"><button type="button" class="btn secondary wide" id="pinSignin">Sign in with PIN</button>';
- box.appendChild(area);
- $('#pinSignin').onclick=()=>{const id=field.value.trim().toUpperCase(),pin=$('#quickPin').value.trim(),d=read(),u=d.users.find(x=>String(x.id).toUpperCase()===id&&x.role==='user'&&x.status!=='Inactive'&&String(x.pin||'')===pin&&pin);if(!u){$('#err').textContent='Invalid Employee ID or PIN.';return}sessionStorage.setItem('ztrend_session_user',u.id);location.reload()};
- document.addEventListener('click',e=>{if(e.target.closest('#signin')){const id=field.value.trim().toUpperCase(),u=read().users.find(x=>String(x.id).toUpperCase()===id&&x.role==='user');if(u)field.value=u.email}},true);
+ document.addEventListener('click',e=>{
+   if(e.target.closest('#signin')){
+     const id=field.value.trim().toUpperCase(),u=read().users.find(x=>String(x.id).toUpperCase()===id&&x.role==='user');
+     if(u)field.value=u.email;
+     setTimeout(()=>{const signed=sessionStorage.getItem('ztrend_session_user');if(signed)localStorage.setItem('ztrend_user_device_session',signed)},0);
+   }
+   if(e.target.closest('#logout'))localStorage.removeItem('ztrend_user_device_session');
+ },true);
 }
 function addProfileTools(){
  const content=$('#content');if(!content||!content.textContent.includes('Your employee account information')&&!content.textContent.includes('Manage your employee details'))return;
  if($('#extraAccountTools'))return;
- const d=read(),id=sessionStorage.getItem('ztrend_session_user'),u=d.users.find(x=>x.id===id);if(!u)return;
- const wrap=document.createElement('div');wrap.id='extraAccountTools';wrap.innerHTML='<section class="panel"><div class="panelhead"><h2>Change Password</h2></div><form id="changePass" class="formgrid"><div class="field"><label>Current Password</label><input name="old" type="password" required></div><div class="field"><label>New Password</label><input name="next" type="password" minlength="8" required></div><div class="field full"><button class="btn primary">Update Password</button></div></form></section><section class="panel"><div class="panelhead"><h2>Quick PIN Login</h2></div><form id="savePin" class="formgrid"><div class="field"><label>Set 4–6 digit PIN</label><input name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" placeholder="Create your PIN" required></div><div class="field full"><button class="btn primary">Save PIN</button></div><p class="hint">Next time login with Employee ID + PIN. Keep it private.</p></form></section>';
+ const d=read(),id=localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user'),u=d.users.find(x=>x.id===id);if(!u)return;
+ const wrap=document.createElement('div');wrap.id='extraAccountTools';wrap.innerHTML='<section class="panel"><div class="panelhead"><h2>Change Password</h2></div><form id="changePass" class="formgrid"><div class="field"><label>Current Password</label><input name="old" type="password" required></div><div class="field"><label>New Password</label><input name="next" type="password" minlength="8" required></div><div class="field full"><button class="btn primary">Update Password</button></div></form></section>';
  content.appendChild(wrap);
  $('#changePass').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),db=read(),me=db.users.find(x=>x.id===id);if(!me||me.password!==f.get('old'))return alert('Current password is incorrect.');if(f.get('next').length<8)return alert('Use at least 8 characters.');me.password=f.get('next');save(db);e.target.reset();alert('Password updated.')};
- $('#savePin').onsubmit=e=>{e.preventDefault();let pin=new FormData(e.target).get('pin').trim();if(!/^[0-9]{4,6}$/.test(pin))return alert('PIN must be 4–6 digits.');let db=read(),me=db.users.find(x=>x.id===id);if(!me)return;me.pin=pin;save(db);alert('PIN saved successfully.')};
 }
 function bottomNav(){
  if(portal!=='user'||!$('#appview')||$('#appview').classList.contains('hidden')||$('#userBottomNav'))return;
