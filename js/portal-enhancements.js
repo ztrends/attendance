@@ -49,10 +49,18 @@ function devDashboard(){
  charts.after(shortcuts);shortcuts.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>document.querySelector('[data-page="'+b.dataset.page+'"]')?.click());
  const results=$('#proDashResults'),input=$('#proDashSearch');input.oninput=()=>{let q=input.value.trim().toLowerCase(),rows=[...companies.map(x=>({kind:'Company',name:x.name,detail:x.code,target:'Companies'})),...users.filter(x=>x.role!=='developer').map(x=>({kind:x.role,name:x.name,detail:x.id+' · '+x.email,target:x.role==='admin'?'Admin Accounts':'All Users'}))].filter(x=>(x.kind+' '+x.name+' '+x.detail).toLowerCase().includes(q)).slice(0,10);results.innerHTML=q?'<div class="search-results">'+rows.map(x=>'<button data-open="'+x.target+'"><b>'+esc(x.name)+'</b><small>'+esc(x.kind+' · '+x.detail)+'</small></button>').join('')+'</div>':'';results.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>document.querySelector('[data-page="'+b.dataset.open+'"]')?.click())};
 }
+function adminDashboard(){
+ if(portal!=='admin'||$('.title')?.textContent!=='Company Dashboard'||$('#adminDashSearch'))return;
+ const root=$('#content');if(!root)return;
+ const search=document.createElement('section');search.className='panel';search.innerHTML='<div class="dash-search"><span>⌕</span><input id="adminDashSearch" placeholder="Search employees, projects and attendance…"></div><div id="adminDashResults"></div>';root.prepend(search);
+ const db=read(),employees=db.users.filter(x=>x.role==='user'&&x.companyId===db.users.find(u=>u.id===sessionStorage.getItem('ztrend_session_admin'))?.companyId);
+ $('#adminDashSearch').oninput=()=>{let q=$('#adminDashSearch').value.trim().toLowerCase(),rows=employees.filter(x=>(x.name+' '+x.id+' '+x.email).toLowerCase().includes(q));$('#adminDashResults').innerHTML=q?'<div class="search-results">'+rows.map(x=>'<div><b>'+esc(x.name)+'</b><small>'+esc(x.id+' · '+x.email)+'</small></div>').join('')+'</div>':''};
+ const stats=document.createElement('div');stats.className='panel';stats.innerHTML='<div class="panelhead"><h2>Workforce Status</h2><span class="dash-tag">LIVE</span></div><div class="status-donut" style="--active:'+(employees.length?employees.filter(x=>x.status!=='Inactive').length/employees.length*100:0)+'%"><div><b>'+employees.length+'</b><small>Employees</small></div></div>';root.appendChild(stats);
+}
 function animate(){document.querySelectorAll('.metric strong[data-count]').forEach(el=>{if(el.dataset.animated)return;el.dataset.animated='1';let n=+el.dataset.count||0,start=performance.now();function frame(t){let p=Math.min(1,(t-start)/650);el.textContent=Math.round(n*(1-Math.pow(1-p,3))).toLocaleString();if(p<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)})}
 function observe(){
  const app=$('#appview');if(!app)return;
- const run=()=>{if(portal==='user'){bottomNav();addProfileTools()}if(portal==='developer')devDashboard();animate()};
+ const run=()=>{if(portal==='user'){bottomNav();addProfileTools()}if(portal==='developer')devDashboard();if(portal==='admin')adminDashboard();animate()};
  new MutationObserver(run).observe(app,{childList:true,subtree:true});run();
 }
 if(portal==='user')userLogin();
