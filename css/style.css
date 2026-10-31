@@ -308,4 +308,4 @@ body[data-portal] #login.login.hidden{display:none!important;}
 
 /* Compact logo spacing on all portal login screens */
 body[data-portal] #login .login-brand{margin:0 auto 7px!important}
-body[data-portal] #login .login-brand-logo{width:76px!important;height:76px!important}
+body[data-portal] #login .login-brand-logo{width:100px!important;height:100px!important}
