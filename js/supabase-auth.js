@@ -67,7 +67,7 @@
       const { data: profiles, error: profilesError } = await client.from('profiles').select('*');
       if (profilesError) throw profilesError;
       const users = (profiles || []).map(p => ({
-        id:p.id, name:p.full_name, email:p.email, mobile:p.mobile_number,
+        id:p.id, employeeId:p.employee_id, name:p.full_name, email:p.email, mobile:p.mobile_number,
         role:p.role, status:p.status, companyId:p.company_id, projectId:p.project_id,
         designation:p.designation, post:p.post, permissions:p.permissions || []
       }));
