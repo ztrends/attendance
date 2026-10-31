@@ -64,16 +64,18 @@
       const { data: leaves, error: leavesError } = await client.from('leaves').select('*');
       if (leavesError) throw leavesError;
 
-      const user = {
-        id: profile.id, name: profile.full_name, email: profile.email,
-        mobile: profile.mobile_number, role: profile.role, status: profile.status,
-        companyId: profile.company_id, projectId: profile.project_id,
-        designation: profile.designation, post: profile.post,
-        permissions: profile.permissions || []
-      };
+      const { data: profiles, error: profilesError } = await client.from('profiles').select('*');
+      if (profilesError) throw profilesError;
+      const users = (profiles || []).map(p => ({
+        id:p.id, name:p.full_name, email:p.email, mobile:p.mobile_number,
+        role:p.role, status:p.status, companyId:p.company_id, projectId:p.project_id,
+        designation:p.designation, post:p.post, permissions:p.permissions || []
+      }));
+      const user = users.find(u => u.id === profile.id);
+      if (!user) throw new Error('Your employee profile could not be loaded.');
 
       const db = {
-        users: [user],
+        users,
         companies: (companies || []).map(c => ({
           id:c.id, name:c.name, code:c.code, phone:c.phone, email:c.email,
           address:c.address, logo:c.logo_url, status:c.status, created:c.created_at
