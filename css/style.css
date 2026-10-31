@@ -231,3 +231,18 @@ body:has(.login-container) {
 @media(min-width:721px){.loginbox form{display:grid;grid-template-columns:1fr 1fr;column-gap:18px;align-items:end}.loginbox form label{grid-row:auto}.loginbox form input{margin-bottom:4px}.loginbox form button{grid-column:1/-1}.loginbox #err{margin-top:8px}}
 @media(max-width:720px){.login{padding:20px 14px}.loginbox{width:min(100%,520px);padding:25px 22px}.login-brand-logo{width:74px;height:74px}}
 @media(prefers-reduced-motion:reduce){.login:before,.login:after,.login-brand-logo,.loginbox{animation:none!important}}
+
+
+/* Correct login proportions: taller, narrower card and original logo */
+.login{gap:0;padding:26px 16px;justify-content:center}
+.login-brand{margin:0 auto 20px}
+.login-brand-logo{width:112px;height:112px;object-fit:contain;display:block}
+.loginbox{width:min(100%,440px);padding:38px 38px 34px;min-height:420px;border-radius:24px;display:flex;flex-direction:column;justify-content:center}
+.loginbox h1{font-size:28px;margin:14px 0 7px}
+.loginbox>p{margin:0 0 22px}
+.loginbox label{margin:15px 0 8px}
+.loginbox input{min-height:48px;padding:13px 14px}
+.loginbox .wide{margin-top:22px;min-height:49px;padding:14px 16px}
+.login-footnote{margin-top:20px}
+@media(min-width:721px){.loginbox form{display:block}.loginbox form label{display:block}.loginbox form input{display:block;margin-bottom:0}.loginbox form button{width:100%}}
+@media(max-width:720px){.loginbox{width:min(100%,440px);min-height:0;padding:30px 24px}.login-brand-logo{width:92px;height:92px}}
