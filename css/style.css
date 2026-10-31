@@ -143,3 +143,66 @@ body:has(.login-container) {
         padding: 32px 22px;
     }
 }
+
+
+/* ===== FINAL LOGIN PAGE VISUAL OVERRIDES ===== */
+.login{
+ min-height:100svh;
+ width:100%;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:0;
+ padding:36px 20px;
+ overflow:auto;
+ background:
+  radial-gradient(ellipse at 18% 18%,rgba(0,190,220,.16),transparent 38%),
+  radial-gradient(ellipse at 82% 82%,rgba(35,105,220,.20),transparent 42%),
+  linear-gradient(135deg,#050d19 0%,#0b1d33 52%,#071321 100%);
+}
+.login-orbit{border-color:rgba(104,190,220,.18);opacity:.5}
+.login-brand{
+ display:flex;align-items:center;justify-content:center;
+ width:100%;margin:0 auto 28px;z-index:2;
+}
+.login-brand-logo{
+ display:block;width:112px;height:112px;object-fit:contain;
+ filter:drop-shadow(0 12px 26px rgba(0,0,0,.42));
+}
+.loginbox{
+ width:min(100%,440px);padding:38px 38px 32px;
+ border:1px solid rgba(142,190,225,.22);
+ border-radius:22px;
+ background:linear-gradient(145deg,rgba(19,39,64,.96),rgba(10,25,43,.96));
+ box-shadow:0 30px 90px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.06);
+ backdrop-filter:blur(18px);
+}
+.login-kicker{color:#8da9c7;letter-spacing:2px}
+.login-kicker i{background:#35d0c1;box-shadow:0 0 0 4px rgba(53,208,193,.12),0 0 16px rgba(53,208,193,.45)}
+.loginbox h1{color:#f4f8ff;font-size:30px;letter-spacing:-.8px}
+.loginbox>p{color:#9db0c7}
+.loginbox label{color:#c0cee0}
+.loginbox input{
+ background:rgba(4,14,26,.68);border:1px solid #29435f;
+ color:#f4f8ff;border-radius:11px;padding:14px 14px;
+}
+.loginbox input::placeholder{color:#71869f}
+.loginbox input:focus{border-color:#35b9d3;box-shadow:0 0 0 4px rgba(53,185,211,.13)}
+.loginbox .wide{
+ background:linear-gradient(105deg,#1679bd,#19b7c4);
+ border:1px solid rgba(127,231,237,.25);
+ box-shadow:0 10px 26px rgba(0,153,190,.20);
+ border-radius:11px;color:#fff;
+}
+.loginbox .wide:hover{box-shadow:0 12px 30px rgba(0,177,207,.32)}
+.login-footnote{color:#91a6bf}
+.secure-dot{background:#36d5a0;box-shadow:0 0 0 4px rgba(54,213,160,.12)}
+.loginbox .error{color:#ff8d96}
+@media(max-width:520px){
+ .login{padding:24px 15px}
+ .login-brand{margin-bottom:20px}
+ .login-brand-logo{width:92px;height:92px}
+ .loginbox{padding:29px 23px 25px;border-radius:18px}
+ .loginbox h1{font-size:26px}
+}
