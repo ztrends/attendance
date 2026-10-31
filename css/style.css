@@ -246,3 +246,15 @@ body:has(.login-container) {
 .login-footnote{margin-top:20px}
 @media(min-width:721px){.loginbox form{display:block}.loginbox form label{display:block}.loginbox form input{display:block;margin-bottom:0}.loginbox form button{width:100%}}
 @media(max-width:720px){.loginbox{width:min(100%,440px);min-height:0;padding:30px 24px}.login-brand-logo{width:92px;height:92px}}
+
+
+/* FINAL login sizing override */
+body[data-portal] #login.login{min-height:100vh!important;height:auto!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;padding:34px 16px!important;gap:0!important}
+body[data-portal] #login .login-brand{margin:0 auto 22px!important}
+body[data-portal] #login .login-brand-logo{display:block!important;width:116px!important;height:116px!important;max-width:116px!important;object-fit:contain!important}
+body[data-portal] #login .loginbox{box-sizing:border-box!important;width: min(100%, 370px)!important;max-width:370px!important;min-height:530px!important;height:auto!important;padding:42px 34px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+body[data-portal] #login .loginbox form{display:flex!important;flex-direction:column!important;width:100%!important}
+body[data-portal] #login .loginbox form label{display:block!important;width:100%!important}
+body[data-portal] #login .loginbox form input{display:block!important;width:100%!important;box-sizing:border-box!important}
+body[data-portal] #login .loginbox form button{display:block!important;width:100%!important}
+@media(max-width:520px){body[data-portal] #login .loginbox{width:min(100%,370px)!important;min-height:490px!important;padding:34px 25px!important}body[data-portal] #login .login-brand-logo{width:96px!important;height:96px!important}}
