@@ -206,3 +206,28 @@ body:has(.login-container) {
  .loginbox{padding:29px 23px 25px;border-radius:18px}
  .loginbox h1{font-size:26px}
 }
+
+
+/* Login refinement: compact wide animated glass panel */
+.login{min-height:100svh;justify-content:center;gap:0;padding:22px 24px;isolation:isolate;background:radial-gradient(ellipse at 18% 18%,rgba(0,207,255,.22),transparent 34%),radial-gradient(ellipse at 84% 78%,rgba(38,105,235,.25),transparent 36%),linear-gradient(135deg,#050d19 0%,#0a1d35 52%,#071322 100%)}
+.login:before,.login:after{content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(1px);animation:loginFloat 12s ease-in-out infinite alternate}
+.login:before{width:390px;height:390px;left:-170px;top:8%;background:radial-gradient(circle,rgba(0,210,255,.18),transparent 68%)}
+.login:after{width:440px;height:440px;right:-180px;bottom:-8%;background:radial-gradient(circle,rgba(54,103,255,.2),transparent 68%);animation-delay:-5s}
+@keyframes loginFloat{from{transform:translate3d(0,-18px,0) scale(.94)}to{transform:translate3d(24px,22px,0) scale(1.08)}}
+.login-orbit{border-color:rgba(116,203,245,.2)}
+.login-brand{margin:0 auto 18px;position:relative}
+.login-brand-logo{width:82px;height:82px;display:block;object-fit:contain;filter:drop-shadow(0 9px 25px rgba(0,0,0,.38));animation:logoBreathe 4s ease-in-out infinite}
+@keyframes logoBreathe{0%,100%{transform:translateY(0);filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}50%{transform:translateY(-5px);filter:drop-shadow(0 13px 25px rgba(0,197,255,.25))}}
+.loginbox{position:relative;isolation:isolate;width:min( min(100%,720px), 720px);padding:28px 54px 26px;border:1px solid transparent;border-radius:25px;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(239,247,255,.91)) padding-box,conic-gradient(from var(--login-angle,0deg),#70e4f2,#ffffff,#4d8ff0,#b4f6ed,#70e4f2) border-box;box-shadow:0 28px 90px rgba(0,0,0,.38),0 0 45px rgba(0,190,255,.12);backdrop-filter:blur(18px);animation:panelGlow 7s ease-in-out infinite}
+@property --login-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes panelGlow{0%,100%{--login-angle:0deg;box-shadow:0 28px 90px rgba(0,0,0,.38),0 0 28px rgba(0,190,255,.10)}50%{--login-angle:180deg;box-shadow:0 30px 95px rgba(0,0,0,.42),0 0 48px rgba(0,190,255,.2)}}
+.loginbox h1{font-size:27px;margin:9px 0 4px}
+.loginbox>p{margin:0 0 13px}
+.loginbox label{margin:10px 0 5px}
+.loginbox input{padding:11px 14px;min-height:44px;background:rgba(255,255,255,.88)}
+.loginbox .wide{margin-top:14px;padding:12px 16px;min-height:46px}
+.login-footnote{margin-top:14px}
+.login-kicker{color:#54718e}
+@media(min-width:721px){.loginbox form{display:grid;grid-template-columns:1fr 1fr;column-gap:18px;align-items:end}.loginbox form label{grid-row:auto}.loginbox form input{margin-bottom:4px}.loginbox form button{grid-column:1/-1}.loginbox #err{margin-top:8px}}
+@media(max-width:720px){.login{padding:20px 14px}.loginbox{width:min(100%,520px);padding:25px 22px}.login-brand-logo{width:74px;height:74px}}
+@media(prefers-reduced-motion:reduce){.login:before,.login:after,.login-brand-logo,.loginbox{animation:none!important}}
