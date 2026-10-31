@@ -10,9 +10,9 @@
   const c=companyOf();
   tasks.push(client.from('companies').update({name:c.name,phone:c.phone||null,email:c.email||null,address:c.address||null,logo_url:c.logo_url||null,status:c.status||'Active'}).eq('id',c.id).then(r=>report('Company',r.error)));
  }
- const ownProjects=db.projects.filter(x=>me.role==='developer'||x.companyId===me.companyId);
+ const ownProjects=me.role==='user'?[]:db.projects.filter(x=>me.role==='developer'||x.companyId===me.companyId);
  if(ownProjects.length)tasks.push(client.from('projects').upsert(ownProjects.map(p=>({id:p.id,company_id:p.companyId,name:p.name,address:p.address||null,lat:p.lat??null,lng:p.lng??null,radius:p.radius||100,status:p.status||'Active',description:p.description||null})),{onConflict:'id'}).then(r=>report('Project',r.error)));
- const ownShifts=db.shifts.filter(x=>me.role==='developer'||x.companyId===me.companyId);
+ const ownShifts=me.role==='user'?[]:db.shifts.filter(x=>me.role==='developer'||x.companyId===me.companyId);
  if(ownShifts.length)tasks.push(client.from('shifts').upsert(ownShifts.map(s=>({id:s.id,company_id:s.companyId,name:s.name,start_time:s.start,end_time:s.end,break_minutes:s.break||0,grace_minutes:s.grace||0,status:s.status||'Active'})),{onConflict:'id'}).then(r=>report('Shift',r.error)));
  const ownAttendance=db.attendance.filter(a=>a.userId===me.id);
  if(ownAttendance.length)tasks.push(client.from('attendance').upsert(ownAttendance.map(a=>({id:a.id,user_id:a.userId,company_id:a.companyId,project_id:a.projectId,date:a.date,check_in_at:a.checkInAt||null,check_out_at:a.checkOutAt||null,check_in_gps:a.checkInGPS||null,check_out_gps:a.checkOutGPS||null})),{onConflict:'id'}).then(r=>report('Attendance',r.error)));
