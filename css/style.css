@@ -258,3 +258,46 @@ body[data-portal] #login .loginbox form label{display:block!important;width:100%
 body[data-portal] #login .loginbox form input{display:block!important;width:100%!important;box-sizing:border-box!important}
 body[data-portal] #login .loginbox form button{display:block!important;width:100%!important}
 @media(max-width:520px){body[data-portal] #login .loginbox{width:min(100%,370px)!important;min-height:490px!important;padding:34px 25px!important}body[data-portal] #login .login-brand-logo{width:96px!important;height:96px!important}}
+
+
+/* Sky + green login theme; ensure portal heading and logo contrast */
+body[data-portal] #login.login{
+ background:
+   radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.78),transparent 35%),
+   radial-gradient(ellipse at 88% 82%,rgba(89,220,166,.30),transparent 38%),
+   linear-gradient(135deg,#c9f2ff 0%,#e7fbf5 48%,#b9eedb 100%)!important;
+}
+body[data-portal] #login .login-brand-logo{
+ filter:drop-shadow(0 5px 12px rgba(12,70,72,.20))!important;
+}
+body[data-portal] #login .loginbox{
+ background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(239,255,249,.98)) padding-box,
+            linear-gradient(135deg,#5ac9e8,#8be0bd,#42b98f) border-box!important;
+ border:1.5px solid transparent!important;
+ box-shadow:0 24px 65px rgba(25,104,104,.17),0 0 28px rgba(60,190,160,.13)!important;
+}
+body[data-portal] #login .login-kicker{color:#167e70!important;font-weight:800!important}
+body[data-portal] #login .login-kicker i{background:#23b98d!important;box-shadow:0 0 0 4px rgba(35,185,141,.14)!important}
+body[data-portal] #login .loginbox h1{
+ color:#123b46!important;
+ opacity:1!important;
+ visibility:visible!important;
+ text-shadow:none!important;
+ font-weight:800!important;
+}
+body[data-portal] #login .loginbox>p{color:#55727a!important}
+body[data-portal] #login .loginbox label{color:#244c52!important;font-weight:700!important}
+body[data-portal] #login .loginbox input{
+ background:#fff!important;color:#173b42!important;
+ border:1px solid #b7d9d3!important;
+}
+body[data-portal] #login .loginbox input::placeholder{color:#829b9a!important}
+body[data-portal] #login .loginbox input:focus{border-color:#27ad91!important;box-shadow:0 0 0 4px rgba(39,173,145,.14)!important}
+body[data-portal] #login .loginbox .wide{
+ background:linear-gradient(105deg,#168bb6,#20ad83)!important;
+ color:#fff!important;border:0!important;
+ box-shadow:0 9px 22px rgba(24,151,139,.22)!important;
+}
+body[data-portal] #login .login-footnote{color:#587a79!important}
+body[data-portal] #login .secure-dot{background:#20ad83!important;box-shadow:0 0 0 4px rgba(32,173,131,.13)!important}
+body[data-portal] #login .loginbox .error{color:#bd3545!important}
