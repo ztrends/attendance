@@ -133,6 +133,43 @@
   }
 
 
+  // Let the account owner request a Supabase-hosted recovery email from the login page.
+  function installForgotPassword() {
+    installForgotPassword();
+  const form = document.querySelector('#signinForm');
+    const email = document.querySelector('#email');
+    const errorBox = document.querySelector('#err');
+    if (!form || document.getElementById('ztrendForgotPassword')) return;
+    const link = document.createElement('button');
+    link.type = 'button';
+    link.id = 'ztrendForgotPassword';
+    link.textContent = 'Forgot password?';
+    link.style.cssText = 'display:block;margin:14px 0 0 auto;padding:6px 0;border:0;background:transparent;color:#168d91;font:inherit;font-size:14px;font-weight:600;cursor:pointer;';
+    form.appendChild(link);
+    link.addEventListener('click', async () => {
+      const address = (email?.value || '').trim();
+      if (!address || !address.includes('@')) {
+        if (errorBox) errorBox.textContent = 'Pehle apna registered email address enter karo.';
+        email?.focus();
+        return;
+      }
+      link.disabled = true;
+      link.textContent = 'Sending recovery email…';
+      if (errorBox) errorBox.textContent = '';
+      try {
+        const redirectTo = window.location.origin + window.location.pathname;
+        const { error } = await client.auth.resetPasswordForEmail(address, { redirectTo });
+        if (error) throw error;
+        if (errorBox) errorBox.textContent = 'Recovery email request bhej di gayi hai. Inbox/spam check karo; link se naya password set karo.';
+      } catch (error) {
+        if (errorBox) errorBox.textContent = error?.message || 'Recovery email send nahi ho saki.';
+      } finally {
+        link.disabled = false;
+        link.textContent = 'Forgot password?';
+      }
+    });
+  }
+
   // Password recovery: render a focused reset form when Supabase returns a recovery session.
   function showPasswordRecovery() {
     const app = document.querySelector('#app');
