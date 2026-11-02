@@ -11,13 +11,17 @@
   const KEY = 'ztrend_workforce_v3';
   const portal = document.body.dataset.portal;
 
+  let signingIn = false;
   async function signIn() {
+    if (signingIn) return;
+    signingIn = true;
     const button = document.querySelector('#signin');
     const errorBox = document.querySelector('#err');
     const identifier = document.querySelector('#email')?.value.trim();
     const password = document.querySelector('#password')?.value || '';
     if (!identifier || !password) {
       errorBox.textContent = 'Enter your login ID and password.';
+      signingIn = false;
       return;
     }
 
@@ -124,6 +128,7 @@
       if (errorBox) errorBox.textContent = error?.message || 'Sign in failed. Please try again.';
       button.disabled = false;
       button.innerHTML = 'Sign in <span>→</span>';
+      signingIn = false;
     }
   }
 
@@ -200,8 +205,13 @@
   const form = document.querySelector('#signinForm');
   const button = document.querySelector('#signin');
   if (form && button) {
-    // Use one handler for click and Enter; bypass the legacy local-only handler.
+    // Explicitly handle both pointer clicks and Enter-key form submits.
+    // The lock in signIn() prevents the browser's submit event from double-firing.
     button.onclick = null;
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      signIn();
+    });
     form.addEventListener('submit', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
