@@ -243,17 +243,13 @@
   const form = document.querySelector('#signinForm');
   const button = document.querySelector('#signin');
   if (form && button) {
-    // Explicitly handle both pointer clicks and Enter-key form submits.
-    // The lock in signIn() prevents the browser's submit event from double-firing.
+    // Use one submission path for mouse, touch, and Enter.
+    // app.js installs a legacy onclick handler; clear it so only cloud auth runs.
     button.onclick = null;
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      signIn();
-    });
     form.addEventListener('submit', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
       signIn();
-    });
+    }, true);
   }
 })();
