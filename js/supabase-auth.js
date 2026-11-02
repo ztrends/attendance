@@ -30,10 +30,23 @@
     errorBox.textContent = '';
 
     try {
-      const { data: loginData, error: loginError } = await client.functions.invoke(
-        'employee-login',
-        { body: { identifier, password } }
-      );
+      // Email sign-in goes straight to Supabase Auth in the browser.
+      // Employee ID/mobile sign-in still uses the lookup Edge Function.
+      let loginData, loginError;
+      if (identifier.includes('@')) {
+        const result = await client.auth.signInWithPassword({ email: identifier, password });
+        loginError = result.error;
+        if (result.data?.session) loginData = {
+          access_token: result.data.session.access_token,
+          refresh_token: result.data.session.refresh_token
+        };
+      } else {
+        const result = await client.functions.invoke('employee-login', {
+          body: { identifier, password }
+        });
+        loginData = result.data;
+        loginError = result.error;
+      }
       if (loginError || !loginData?.access_token || !loginData?.refresh_token) {
         // Supabase Functions returns non-2xx responses as FunctionsHttpError;
         // the useful JSON error is in error.context, not error.message.
