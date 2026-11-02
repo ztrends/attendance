@@ -111,6 +111,76 @@
     }
   }
 
+
+  // Password recovery: render a focused reset form when Supabase returns a recovery session.
+  function showPasswordRecovery() {
+    const app = document.querySelector('#app');
+    if (!app || document.getElementById('ztrendRecoveryPanel')) return;
+    const panel = document.createElement('section');
+    panel.id = 'ztrendRecoveryPanel';
+    panel.style.cssText = 'min-height:100vh;display:grid;place-items:center;padding:24px;background:#101d32;color:#f7f9fc;font-family:inherit;';
+    panel.innerHTML = `
+      <div style="width:min(100%,430px);box-sizing:border-box;padding:32px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:#172740;box-shadow:0 24px 70px rgba(0,0,0,.28)">
+        <div style="font-size:12px;letter-spacing:2px;color:#9db2cc;margin-bottom:12px">ZTREND WORKFORCE</div>
+        <h1 style="font-size:25px;margin:0 0 8px">Set a new password</h1>
+        <p style="color:#aebed2;margin:0 0 24px;line-height:1.5">Choose a new password for your Developer account.</p>
+        <form id="ztrendRecoveryForm">
+          <label for="ztrendNewPassword" style="display:block;margin:0 0 8px">New password</label>
+          <input id="ztrendNewPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters" style="box-sizing:border-box;width:100%;padding:14px;border-radius:10px;border:1px solid #52657d;background:#0e1a2b;color:white;margin-bottom:16px">
+          <label for="ztrendConfirmPassword" style="display:block;margin:0 0 8px">Confirm new password</label>
+          <input id="ztrendConfirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter password again" style="box-sizing:border-box;width:100%;padding:14px;border-radius:10px;border:1px solid #52657d;background:#0e1a2b;color:white;margin-bottom:18px">
+          <button id="ztrendSavePassword" type="submit" style="width:100%;padding:14px;border:0;border-radius:10px;background:#38bdf8;color:#071525;font-weight:700;font-size:15px">Update password</button>
+          <p id="ztrendRecoveryMessage" role="alert" style="margin:14px 0 0;line-height:1.5;color:#fca5a5"></p>
+        </form>
+      </div>`;
+    app.replaceChildren(panel);
+    const form = panel.querySelector('#ztrendRecoveryForm');
+    const msg = panel.querySelector('#ztrendRecoveryMessage');
+    const save = panel.querySelector('#ztrendSavePassword');
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const password = panel.querySelector('#ztrendNewPassword').value;
+      const confirm = panel.querySelector('#ztrendConfirmPassword').value;
+      msg.style.color = '#fca5a5';
+      if (password.length < 8) { msg.textContent = 'Password must be at least 8 characters.'; return; }
+      if (password !== confirm) { msg.textContent = 'Passwords do not match.'; return; }
+      save.disabled = true;
+      save.textContent = 'Updating…';
+      msg.textContent = '';
+      try {
+        const { error } = await client.auth.updateUser({ password });
+        if (error) throw error;
+        msg.style.color = '#86efac';
+        msg.textContent = 'Password updated successfully. You can now sign in with your new password.';
+        form.querySelectorAll('input').forEach(input => input.disabled = true);
+        save.textContent = 'Password updated';
+        const back = document.createElement('a');
+        back.href = window.location.pathname;
+        back.textContent = 'Return to Developer login';
+        back.style.cssText = 'display:block;text-align:center;margin-top:18px;color:#7dd3fc;text-decoration:none';
+        form.appendChild(back);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (error) {
+        msg.textContent = error?.message || 'Password update failed. Request a new recovery email.';
+        save.disabled = false;
+        save.textContent = 'Update password';
+      }
+    });
+  }
+
+  client.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') showPasswordRecovery();
+  });
+  if (new URLSearchParams(window.location.hash.slice(1)).get('type') === 'recovery') {
+    client.auth.getSession().then(({ data }) => {
+      if (data?.session) showPasswordRecovery();
+      else {
+        const errorBox = document.querySelector('#err');
+        if (errorBox) errorBox.textContent = 'Recovery link is invalid or expired. Request a new password recovery email.';
+      }
+    });
+  }
+
   const form = document.querySelector('#signinForm');
   const button = document.querySelector('#signin');
   if (form && button) {
