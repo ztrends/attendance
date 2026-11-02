@@ -105,20 +105,21 @@
       window.location.reload();
     } catch (error) {
       console.error('ZTREND cloud sign-in failed:', error);
-      errorBox.textContent = error.message || 'Sign in failed. Please try again.';
+      if (errorBox) errorBox.textContent = error?.message || 'Sign in failed. Please try again.';
       button.disabled = false;
       button.innerHTML = 'Sign in <span>→</span>';
     }
   }
 
+  const form = document.querySelector('#signinForm');
   const button = document.querySelector('#signin');
-  if (button) {
-    button.onclick = signIn;
-    document.querySelector('#password')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') signIn();
-    });
-    document.querySelector('#email')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') signIn();
+  if (form && button) {
+    // Use one handler for click and Enter; bypass the legacy local-only handler.
+    button.onclick = null;
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      signIn();
     });
   }
 })();
