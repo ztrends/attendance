@@ -31,7 +31,23 @@
         { body: { identifier, password } }
       );
       if (loginError || !loginData?.access_token || !loginData?.refresh_token) {
-        throw new Error(loginData?.error || loginError?.message || 'Invalid login details.');
+        // Supabase Functions returns non-2xx responses as FunctionsHttpError;
+        // the useful JSON error is in error.context, not error.message.
+        let serverMessage = loginData?.error;
+        if (!serverMessage && loginError?.context) {
+          try {
+            const response = loginError.context;
+            const payload = typeof response.clone === 'function'
+              ? await response.clone().json()
+              : null;
+            serverMessage = payload?.error || payload?.message;
+          } catch (_) { /* Keep the safe fallback below. */ }
+        }
+        const status = loginError?.context?.status;
+        if (!serverMessage && status === 401) serverMessage = 'Email/login ID ya password galat hai, ya account inactive hai.';
+        if (!serverMessage && status === 404) serverMessage = 'Login service nahi mili. Supabase Edge Function deployment check karein.';
+        if (!serverMessage && status >= 500) serverMessage = 'Login service mein server error hai. Thodi der baad retry karein.';
+        throw new Error(serverMessage || loginError?.message || 'Login complete nahi hua.');
       }
 
       const { data: sessionData, error: sessionError } = await client.auth.setSession({
