@@ -135,7 +135,6 @@
 
   // Let the account owner request a Supabase-hosted recovery email from the login page.
   function installForgotPassword() {
-    installForgotPassword();
   const form = document.querySelector('#signinForm');
     const email = document.querySelector('#email');
     const errorBox = document.querySelector('#err');
@@ -169,6 +168,8 @@
       }
     });
   }
+
+  installForgotPassword();
 
   // Password recovery: render a focused reset form when Supabase returns a recovery session.
   function showPasswordRecovery() {
