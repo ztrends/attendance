@@ -30,8 +30,13 @@
     errorBox.textContent = '';
 
     try {
+      // Developer accounts authenticate ONLY by their registered email.
+      // They are platform accounts, not employee records; never send their ID to employee-login.
+      if (portal === 'developer' && !identifier.includes('@')) {
+        throw new Error('Developer Portal mein registered email address se login karein. Employee ID / mobile yahan use nahi hota.');
+      }
       // Email sign-in goes straight to Supabase Auth in the browser.
-      // Employee ID/mobile sign-in still uses the lookup Edge Function.
+      // Employee ID/mobile lookup is reserved for company employee/admin portals.
       let loginData, loginError;
       // Never leave the login button spinning forever if the network/Auth request stalls.
       const authRequest = identifier.includes('@')
