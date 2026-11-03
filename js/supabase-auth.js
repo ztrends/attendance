@@ -33,17 +33,21 @@
       // Email sign-in goes straight to Supabase Auth in the browser.
       // Employee ID/mobile sign-in still uses the lookup Edge Function.
       let loginData, loginError;
+      // Never leave the login button spinning forever if the network/Auth request stalls.
+      const authRequest = identifier.includes('@')
+        ? client.auth.signInWithPassword({ email: identifier, password })
+        : client.functions.invoke('employee-login', { body: { identifier, password } });
+      const timeout = new Promise((_, reject) =>
+        window.setTimeout(() => reject(new Error('Login request timed out. Check your internet connection and try again.')), 15000)
+      );
+      const result = await Promise.race([authRequest, timeout]);
       if (identifier.includes('@')) {
-        const result = await client.auth.signInWithPassword({ email: identifier, password });
         loginError = result.error;
         if (result.data?.session) loginData = {
           access_token: result.data.session.access_token,
           refresh_token: result.data.session.refresh_token
         };
       } else {
-        const result = await client.functions.invoke('employee-login', {
-          body: { identifier, password }
-        });
         loginData = result.data;
         loginError = result.error;
       }
@@ -138,9 +142,14 @@
       window.location.reload();
     } catch (error) {
       console.error('ZTREND cloud sign-in failed:', error);
-      if (errorBox) errorBox.textContent = error?.message || 'Sign in failed. Please try again.';
-      button.disabled = false;
-      button.innerHTML = 'Sign in <span>→</span>';
+      if (errorBox) {
+        errorBox.textContent = error?.message || 'Sign in failed. Please try again.';
+        errorBox.style.display = 'block';
+      }
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = 'Sign in <span>→</span>';
+      }
       signingIn = false;
     }
   }
