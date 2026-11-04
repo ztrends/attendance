@@ -40,7 +40,7 @@
       let loginData, loginError;
       // Never leave the login button spinning forever if the network/Auth request stalls.
       const authRequest = identifier.includes('@')
-        ? client.auth.signInWithPassword({ email: identifier, password })
+        ? client.auth.signInWithPassword({ email: identifier.toLowerCase(), password })
         : client.functions.invoke('employee-login', { body: { identifier, password } });
       const timeout = new Promise((_, reject) =>
         window.setTimeout(() => reject(new Error('Login request timed out. Check your internet connection and try again.')), 15000)
@@ -90,7 +90,7 @@
         await client.auth.signOut();
         throw new Error('This account does not have access to this portal.');
       }
-      if (profile.status !== 'Active') {
+      if (String(profile.status || '').toLowerCase() !== 'active') {
         await client.auth.signOut();
         throw new Error('This account is inactive. Contact your administrator.');
       }
@@ -162,6 +162,52 @@
 
   // Let the account owner request a Supabase-hosted recovery email from the login page.
   function installForgotPassword() {
+
+  // Restore only a Supabase-validated session belonging to this portal.
+  // This prevents a stale localStorage profile from opening a panel by itself.
+  async function validateRestoredSession() {
+    const expectedId = portal === 'user'
+      ? (localStorage.getItem('ztrend_user_device_session') || sessionStorage.getItem('ztrend_session_user'))
+      : sessionStorage.getItem('ztrend_session_' + portal);
+    if (!expectedId) return;
+
+    const clearLocalSession = async () => {
+      try {
+        sessionStorage.removeItem('ztrend_session_' + portal);
+        if (portal === 'user') localStorage.removeItem('ztrend_user_device_session');
+      } catch (_) {}
+      try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
+      window.location.reload();
+    };
+
+    try {
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+      const session = sessionData?.session;
+      if (sessionError || !session || session.user?.id !== expectedId) {
+        await clearLocalSession();
+        return;
+      }
+
+      const { data: verified, error: verifyError } = await client.auth.getUser();
+      if (verifyError || !verified?.user || verified.user.id !== expectedId) {
+        await clearLocalSession();
+        return;
+      }
+
+      const { data: profile, error: profileError } = await client
+        .from('profiles').select('id,role,status').eq('id', expectedId).maybeSingle();
+      if (profileError || !profile || profile.role !== portal ||
+          String(profile.status || '').toLowerCase() !== 'active') {
+        await clearLocalSession();
+      }
+    } catch (error) {
+      console.error('ZTREND session validation failed:', error);
+      await clearLocalSession();
+    }
+  }
+
+  validateRestoredSession();
+
   const form = document.querySelector('#signinForm');
     const email = document.querySelector('#email');
     const errorBox = document.querySelector('#err');
