@@ -5,16 +5,8 @@ const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function userLogin(){
  const label=$('label[for="email"]'),field=$('#email');
- if(label)label.textContent='Employee ID';
- if(field){field.type='text';field.placeholder='Enter your Employee ID';field.autocomplete='username'}
- document.addEventListener('click',e=>{
-   if(e.target.closest('#signin')){
-     const id=field.value.trim().toUpperCase(),u=read().users.find(x=>String(x.id).toUpperCase()===id&&x.role==='user');
-     if(u)field.value=u.email;
-     setTimeout(()=>{const signed=sessionStorage.getItem('ztrend_session_user');if(signed)localStorage.setItem('ztrend_user_device_session',signed)},0);
-   }
-   if(e.target.closest('#logout'))localStorage.removeItem('ztrend_user_device_session');
- },true);
+ if(label)label.textContent='Email / Employee ID / Mobile';
+ if(field){field.type='text';field.placeholder='Enter email, Employee ID or mobile number';field.autocomplete='username'}
 }
 function addProfileTools(){
  const content=$('#content');if(!content||!content.textContent.includes('Your employee account information')&&!content.textContent.includes('Manage your employee details'))return;
