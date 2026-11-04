@@ -9,12 +9,32 @@ function userLogin(){
  if(field){field.type='text';field.placeholder='Enter email, Employee ID or mobile number';field.autocomplete='username'}
 }
 function addProfileTools(){
- const content=$('#content');if(!content||!content.textContent.includes('Your employee account information')&&!content.textContent.includes('Manage your employee details'))return;
- if($('#extraAccountTools'))return;
- const d=read(),id=localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user'),u=d.users.find(x=>x.id===id);if(!u)return;
- const wrap=document.createElement('div');wrap.id='extraAccountTools';wrap.innerHTML='<section class="panel"><div class="panelhead"><h2>Change Password</h2></div><form id="changePass" class="formgrid"><div class="field"><label>Current Password</label><input name="old" type="password" required></div><div class="field"><label>New Password</label><input name="next" type="password" minlength="8" required></div><div class="field full"><button class="btn primary">Update Password</button></div></form></section>';
+ const content=$('#content');
+ if(portal!=='user'||!content||$('.title')?.textContent!=='My Profile'||$('#extraAccountTools'))return;
+ const id=localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user');
+ const d=read(),u=d.users.find(x=>x.id===id);
+ if(!u)return;
+ const wrap=document.createElement('section');
+ wrap.id='extraAccountTools';
+ wrap.className='panel';
+ wrap.innerHTML='<div class="panelhead"><h2>Change Password</h2></div><form id="changePass" class="formgrid"><div class="field"><label>New Password</label><input name="next" type="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label>Confirm New Password</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required></div><div class="field full"><button class="btn primary">Update Password</button><p class="hint" id="changePassMessage" role="status">Password is updated securely in your Supabase account.</p></div></form>';
  content.appendChild(wrap);
- $('#changePass').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),db=read(),me=db.users.find(x=>x.id===id);if(!me||me.password!==f.get('old'))return alert('Current password is incorrect.');if(f.get('next').length<8)return alert('Use at least 8 characters.');me.password=f.get('next');save(db);e.target.reset();alert('Password updated.')};
+ $('#changePass').onsubmit=async e=>{
+  e.preventDefault();
+  const form=e.currentTarget,fd=new FormData(form),next=String(fd.get('next')||''),confirm=String(fd.get('confirm')||''),message=$('#changePassMessage'),button=form.querySelector('button'),client=window.ZTrendBackend?.client;
+  if(next.length<8){message.textContent='Use at least 8 characters.';return}
+  if(next!==confirm){message.textContent='Passwords do not match.';return}
+  if(!client){message.textContent='Secure account connection unavailable. Reload and try again.';return}
+  button.disabled=true;button.textContent='Updating…';message.textContent='';
+  try{
+   const {data,error:sessionError}=await client.auth.getSession();
+   if(sessionError||!data?.session||data.session.user.id!==id)throw new Error('Your secure login session has expired. Sign in again.');
+   const {error}=await client.auth.updateUser({password:next});
+   if(error)throw error;
+   form.reset();message.textContent='Password updated successfully in Supabase.';
+  }catch(error){message.textContent=error?.message||'Password update failed.'}
+  finally{button.disabled=false;button.textContent='Update Password'}
+ };
 }
 function bottomNav(){
  if(portal!=='user'||!$('#appview')||$('#appview').classList.contains('hidden')||$('#userBottomNav'))return;
