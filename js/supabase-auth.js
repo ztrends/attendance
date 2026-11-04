@@ -86,6 +86,8 @@
         .from('profiles').select('*').eq('id', sessionData.user.id).maybeSingle();
       if (profileError || !profile) throw new Error('Your employee profile is not configured.');
 
+      sessionStorage.setItem('ztrend_auth_verified_' + portal, profile.id);
+
       if (profile.role !== portal) {
         await client.auth.signOut();
         throw new Error('This account does not have access to this portal.');
@@ -143,6 +145,7 @@
 
       localStorage.setItem(KEY, JSON.stringify(db));
       sessionStorage.setItem('ztrend_session_' + portal, user.id);
+      sessionStorage.setItem('ztrend_auth_verified_' + portal, user.id);
       if (portal === 'user') localStorage.setItem('ztrend_user_device_session', user.id);
       window.location.reload();
     } catch (error) {
@@ -174,6 +177,7 @@
     const clearLocalSession = async () => {
       try {
         sessionStorage.removeItem('ztrend_session_' + portal);
+        sessionStorage.removeItem('ztrend_auth_verified_' + portal);
         if (portal === 'user') localStorage.removeItem('ztrend_user_device_session');
       } catch (_) {}
       try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
@@ -199,6 +203,11 @@
       if (profileError || !profile || profile.role !== portal ||
           String(profile.status || '').toLowerCase() !== 'active') {
         await clearLocalSession();
+      }
+      else {
+        const prior = sessionStorage.getItem('ztrend_auth_verified_' + portal);
+        sessionStorage.setItem('ztrend_auth_verified_' + portal, expectedId);
+        if (prior !== expectedId) window.location.reload();
       }
     } catch (error) {
       console.error('ZTREND session validation failed:', error);
