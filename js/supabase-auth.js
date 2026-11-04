@@ -147,7 +147,9 @@
       sessionStorage.setItem('ztrend_session_' + portal, user.id);
       sessionStorage.setItem('ztrend_auth_verified_' + portal, user.id);
       if (portal === 'user') localStorage.setItem('ztrend_user_device_session', user.id);
-      window.location.reload();
+      if (!window.ZTrendApp?.activate(user.id)) {
+        throw new Error('Login successful, but dashboard could not be opened. Reload this portal and sign in again.');
+      }
     } catch (error) {
       console.error('ZTREND cloud sign-in failed:', error);
       if (errorBox) {
