@@ -59,4 +59,23 @@ if(page==='Platform Overview'){
  heading('Platform Settings','Local data backup and reset.');$('#content').innerHTML=panel('Data Controls',`<div class="actions"><button class="btn secondary" id="backup">Download JSON Backup</button><button class="btn danger" id="reset">Clear Workspace Data</button></div><div class="notice">Clears all local workspace records. Export a backup first.</div>`);$('#backup').onclick=()=>download('ztrend-backup.json',JSON.stringify(db,null,2),'application/json');$('#reset').onclick=()=>{if(confirm('Permanently clear all workspace data?')){localStorage.removeItem(KEY);db=JSON.parse(JSON.stringify(seed));me=null;page='Platform Overview';login();toast('Workspace cleared')}};
 }
 }
+window.ZTrendApp={
+ activate(userId){
+  try{
+   const latest=JSON.parse(localStorage.getItem(KEY)||'{}');
+   if(!latest||!Array.isArray(latest.users))return false;
+   db=latest;
+   const id=portal==='user'?(localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user')):sessionStorage.getItem('ztrend_session_'+portal);
+   const verified=sessionStorage.getItem('ztrend_auth_verified_'+portal);
+   if(id!==userId||verified!==userId)return false;
+   const account=db.users.find(x=>x&&x.id===userId&&x.role===portal&&String(x.status||'').toLowerCase()==='active');
+   if(!account)return false;
+   if(portal!=='developer'&&(!account.companyId||!db.companies.some(x=>x.id===account.companyId&&String(x.status||'').toLowerCase()==='active')))return false;
+   me=account;
+   page=portal==='developer'?'Platform Overview':portal==='admin'?'Dashboard':'Overview';
+   renderShell();
+   return true;
+  }catch(error){console.error('ZTREND dashboard activation failed:',error);return false}
+ }
+};
 if(me)renderShell();else login();})();
