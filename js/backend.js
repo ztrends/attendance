@@ -11,7 +11,15 @@
     return;
   }
 
-  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  const portal = document.body?.dataset?.portal || 'unknown';
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: {
+      storageKey: 'ztrend-' + portal + '-auth',
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
   window.ZTrendBackend = {
     provider: 'supabase',
     ready: true,
