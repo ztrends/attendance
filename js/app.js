@@ -67,9 +67,16 @@ window.ZTrendApp={
    db=latest;
    const id=portal==='user'?(localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user')):sessionStorage.getItem('ztrend_session_'+portal);
    const verified=sessionStorage.getItem('ztrend_auth_verified_'+portal);
-   if(id!==userId||verified!==userId)return false;
-   const account=db.users.find(x=>x&&x.id===userId&&x.role===portal&&String(x.status||'').toLowerCase()==='active');
-   if(!account)return false;
+   const targetId=String(userId||'');
+   if(!targetId||String(id||'')!==targetId||String(verified||'')!==targetId){
+    console.error('ZTREND activation check failed: session mismatch',{portal,hasId:!!id,hasVerified:!!verified});
+    return false;
+   }
+   const account=db.users.find(x=>x&&String(x.id)===targetId&&String(x.role||'').trim().toLowerCase()===String(portal).toLowerCase()&&String(x.status||'').trim().toLowerCase()==='active');
+   if(!account){
+    console.error('ZTREND activation check failed: active portal profile missing',{portal,userId:targetId,profiles:db.users.length});
+    return false;
+   }
    if(portal!=='developer'&&(!account.companyId||!db.companies.some(x=>x.id===account.companyId&&String(x.status||'').toLowerCase()==='active')))return false;
    me=account;
    page=portal==='developer'?'Platform Overview':portal==='admin'?'Dashboard':'Overview';
