@@ -61,28 +61,20 @@ if(page==='Platform Overview'){
 }
 window.ZTrendApp={
  activate(userId){
-  try{
-   const latest=JSON.parse(localStorage.getItem(KEY)||'{}');
-   if(!latest||!Array.isArray(latest.users))return false;
-   db=latest;
-   const id=portal==='user'?(localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user')):sessionStorage.getItem('ztrend_session_'+portal);
-   const verified=sessionStorage.getItem('ztrend_auth_verified_'+portal);
-   const targetId=String(userId||'');
-   if(!targetId||String(id||'')!==targetId||String(verified||'')!==targetId){
-    console.error('ZTREND activation check failed: session mismatch',{portal,hasId:!!id,hasVerified:!!verified});
-    return false;
-   }
-   const account=db.users.find(x=>x&&String(x.id)===targetId&&String(x.role||'').trim().toLowerCase()===String(portal).toLowerCase()&&String(x.status||'').trim().toLowerCase()==='active');
-   if(!account){
-    console.error('ZTREND activation check failed: active portal profile missing',{portal,userId:targetId,profiles:db.users.length});
-    return false;
-   }
-   if(portal!=='developer'&&(!account.companyId||!db.companies.some(x=>x.id===account.companyId&&String(x.status||'').toLowerCase()==='active')))return false;
-   me=account;
-   page=portal==='developer'?'Platform Overview':portal==='admin'?'Dashboard':'Overview';
-   renderShell();
-   return true;
-  }catch(error){console.error('ZTREND dashboard activation failed:',error);return false}
+  const latest=JSON.parse(localStorage.getItem(KEY)||'{}');
+  if(!latest||!Array.isArray(latest.users))throw new Error('Local workspace data is missing or invalid.');
+  db=latest;
+  const id=portal==='user'?(localStorage.getItem('ztrend_user_device_session')||sessionStorage.getItem('ztrend_session_user')):sessionStorage.getItem('ztrend_session_'+portal);
+  const verified=sessionStorage.getItem('ztrend_auth_verified_'+portal);
+  const targetId=String(userId||'');
+  if(!targetId||String(id||'')!==targetId||String(verified||'')!==targetId)throw new Error('Portal session verification failed. Reload this portal and sign in again.');
+  const account=db.users.find(x=>x&&String(x.id)===targetId&&String(x.role||'').trim().toLowerCase()===String(portal).toLowerCase()&&String(x.status||'').trim().toLowerCase()==='active');
+  if(!account)throw new Error('Active '+portal+' profile missing from loaded workspace data.');
+  if(portal!=='developer'&&(!account.companyId||!db.companies.some(x=>x.id===account.companyId&&String(x.status||'').toLowerCase()==='active')))throw new Error('This account is not linked to an active company.');
+  me=account;
+  page=portal==='developer'?'Platform Overview':portal==='admin'?'Dashboard':'Overview';
+  try{renderShell()}catch(error){console.error('ZTREND dashboard render failed:',error);throw new Error('Dashboard render failed: '+(error?.message||'Unknown UI error'))}
+  return true;
  }
 };
 if(me)renderShell();else login();})();
