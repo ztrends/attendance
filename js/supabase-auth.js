@@ -148,7 +148,7 @@
       sessionStorage.setItem('ztrend_auth_verified_' + portal, user.id);
       if (portal === 'user') localStorage.setItem('ztrend_user_device_session', user.id);
       if (typeof window.ZTrendApp?.activate !== 'function') {
-        throw new Error('Developer dashboard script did not load. The portal is using a stale or incomplete app.js file; refresh after the portal update finishes.');
+        throw new Error('Developer dashboard script did not initialize. '+(window.__ZTREND_APP_ERRORS?.join(' | ')||'No browser startup error was captured; check the app.js network response and deployment.'));
       }
       const activated = window.ZTrendApp.activate(user.id);
       if (activated !== true) {
