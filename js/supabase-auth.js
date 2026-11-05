@@ -147,8 +147,12 @@
       sessionStorage.setItem('ztrend_session_' + portal, user.id);
       sessionStorage.setItem('ztrend_auth_verified_' + portal, user.id);
       if (portal === 'user') localStorage.setItem('ztrend_user_device_session', user.id);
-      if (!window.ZTrendApp?.activate(user.id)) {
-        throw new Error('Login successful, but dashboard could not be opened. Reload this portal and sign in again.');
+      if (typeof window.ZTrendApp?.activate !== 'function') {
+        throw new Error('Developer dashboard script did not load. The portal is using a stale or incomplete app.js file; refresh after the portal update finishes.');
+      }
+      const activated = window.ZTrendApp.activate(user.id);
+      if (activated !== true) {
+        throw new Error('Dashboard activation returned false without a reason. Check the Developer Portal console for ZTREND activation diagnostics.');
       }
     } catch (error) {
       console.error('ZTREND cloud sign-in failed:', error);
